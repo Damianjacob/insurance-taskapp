@@ -1,50 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Button, Alert } from 'react-native';
-import { Task, TaskListProps } from '../../App';
-import GenericButton from './GenericButton';
+import { TaskListProps } from '../utils/types';
+import { Task } from '../utils/types';
+import GenericButton from '../components/buttons/GenericButton';
+import { TaskContext } from '../../App';
 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
-    const [taskArray, setTaskArray] = useState<Task[]>([])
-    const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0)
+    // const [taskArray, setTaskArray] = useState<Task[]>([])
+    const taskContext = useContext(TaskContext)
+    const taskArray = taskContext.taskArray
+    const updateTaskArray = taskContext.updateTaskArray
+    // const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0)
     const newTasks: Task[] = taskArray.filter(task => task.status === 'new')
-
-    useEffect(() => {
-        // get tasks from file and set them as state when the app starts
-        const taskData: Task[] = require('../../tasks.json')
-        setTaskArray(taskData)
-    }, [])
-
-    // useEffect(() => {
-    //     navigation.navigate('TaskDetail', {task: newTasks[currentTaskIndex], skipTask: skipTask})
-    // }, [currentTaskIndex])
 
     const startTaskList = () => {
         // create array that contains only new tasks
         if (newTasks.length > 0) {
-            navigation.navigate('TaskDetail', { tasks: newTasks, taskIndex: 0 })
+            navigation.navigate('TaskDetail', { tasks: newTasks, taskIndex: 0, filterBy: 'new' })
         } else {
             Alert.alert('There are no new tasks')
         }
     }
 
-    // const skipTask = () => {
-    //     console.log('calling skiptask')
-    //     setCurrentTaskIndex(prev => {
-    //         let newState = prev + 1
-    //         navigation.navigate('TaskDetail', {task: newTasks[newState], skipTask: skipTask})
-    //         return newState
-    //     })
-    // }
+    const renderItem = (item: Task, index: number) => {
+        return (
+            <TouchableOpacity
+                onPress={() => navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: index })}>
+                <View style={styles.itemContainer}>
+                    <Text style={styles.itemContractNumber}>{item.contractNumber}</Text>
+                    <Text>{item.status}</Text>
+                </View>
+            </TouchableOpacity>
+        )
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.header}>this is the tasklistscreen</Text>
             <FlatList
+                initialNumToRender={15}
                 style={styles.taskList}
                 data={taskArray}
                 ListHeaderComponent={() => {
@@ -56,17 +55,7 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
                     )
                 }}
                 stickyHeaderIndices={[0]}
-                renderItem={({ item, index }) => {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: index})}>
-                            <View style={styles.itemContainer}>
-                                <Text style={styles.itemContractNumber}>{item.contractNumber}</Text>
-                                <Text>{item.status}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                }}
+                renderItem={({ item, index }) => renderItem(item, index)}
             />
             <View style={styles.buttonContainer}>
                 <GenericButton

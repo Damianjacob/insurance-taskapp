@@ -1,41 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import { StyleSheet, Text, View } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
-import TaskListScreen from './src/components/TaskListScreen';
-import TaskDetailScreen from './src/components/TaskDetailScreen';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-export type Task = {
-	contractNumber: string
-	name: string
-	status: string
-	birthdate: string
-	gender: string
-	address: string,
-	phone: string,
-	id: string
-}
-type RootStackParamList = {
-	Home: undefined,
-	TaskDetail: { tasks: Task[], taskIndex: number }
-}
+import { createContext, useState, useEffect } from 'react';
+import { Task } from './src/utils/types';
+import AppNavigation from './src/navigation/AppNavigation';
 
-export type TaskDetailProps = NativeStackScreenProps<RootStackParamList, 'TaskDetail'>
-export type TaskListProps = NativeStackScreenProps<RootStackParamList, 'Home'>
-const Stack = createNativeStackNavigator<RootStackParamList>()
+type TaskContext = {
+	taskArray: Task[]
+	updateTaskArray?: (newTaskArray: Task[]) => void
+	updateTask?: (updatedTask: Task) => void
+}
+export const TaskContext = createContext<TaskContext>({ taskArray: [] })
 
 export default function App() {
+	const [taskArray, setTaskArray] = useState<Task[]>([])
+
+	const updateTaskArray = (newTaskArray: Task[]) => {
+		setTaskArray(newTaskArray)
+	}
+
+	const updateTask = (updatedTask: Task) => {
+		// taskArray.filter(task => task.id === updatedTask.id)
+		let taskIndex = taskArray.findIndex(task => task.id === updatedTask.id)
+		let newTaskArray = [...taskArray]
+		newTaskArray[taskIndex] = updatedTask
+		setTaskArray(newTaskArray)
+	}
+
+	const taskContext: TaskContext = {
+		taskArray: taskArray,
+		updateTaskArray: updateTaskArray,
+		updateTask: updateTask
+	}
+
+	useEffect(() => {
+		// get tasks from file and set them as state when the app starts
+		const taskData: Task[] = require('./tasks.json')
+		setTaskArray(taskData)
+		// console.log(taskData)
+	}, [])
+
 	return (
-		<NavigationContainer>
-			<Stack.Navigator
-				initialRouteName='Home'
-				screenOptions={{ headerShown: false }}
-			>
-				<Stack.Screen name='Home' component={TaskListScreen} />
-				<Stack.Screen name='TaskDetail' component={TaskDetailScreen} />
-			</Stack.Navigator>
-		</NavigationContainer>
+		<TaskContext.Provider
+			value={taskContext}
+		>
+			<AppNavigation />
+		</TaskContext.Provider>
 	);
 }
 

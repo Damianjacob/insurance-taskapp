@@ -5,18 +5,20 @@ type GenericButtonProps = {
     text: string,
     color?: string,
     backgroundColor?: string,
-    onPress: () => void
+    onPress: () => void,
+    disable?: boolean
 }
 
-const GenericButton: FC<GenericButtonProps> = ({ text, color, backgroundColor, onPress }) => {
+const GenericButton: FC<GenericButtonProps> = ({ text, color, backgroundColor, onPress, disable }) => {
     color = color || 'white'
     backgroundColor = backgroundColor || 'blue'
 
     return (
         <TouchableOpacity
             onPress={onPress}
+            disabled={disable}
         >
-            <View style={[styles.container, { backgroundColor: backgroundColor }]}>
+            <View style={[styles.container, { backgroundColor: disable ? 'gray' : backgroundColor }]}>
                 <Text style={[styles.buttonText, { color: color }]}>{text}</Text>
             </View>
         </TouchableOpacity>
