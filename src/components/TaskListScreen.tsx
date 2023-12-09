@@ -1,24 +1,38 @@
 import { StatusBar } from 'expo-status-bar';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FC } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import React, { FC, useEffect, useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Button, Alert } from 'react-native';
 import { Task, TaskListProps } from '../../App';
-const taskData:Task[] = require('../../tasks.json')
+import GenericButton from './GenericButton';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-// type TaskListScreenNavigationProp = NativeStackNavigationProp<
-//     'TaskListScreen'
-// >;
 const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
+    const [taskArray, setTaskArray] = useState<Task[]>([])
+
+    useEffect(() => {
+        // get tasks from file and set them as state when the app starts
+        const taskData: Task[] = require('../../tasks.json')
+        setTaskArray(taskData)
+    }, [])
+
+    const startTaskList = () => {
+        // create array that contains only new tasks
+        const newTasks: Task[] = taskArray.filter(task => task.status === 'new')
+        if (newTasks.length > 0){
+            navigation.navigate('TaskDetail', { task: newTasks[0] })
+        } else {
+            Alert.alert('There are no new tasks')
+        }
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.header}>this is the tasklistscreen</Text>
             <FlatList
                 style={styles.taskList}
-                data={taskData}
+                data={taskArray}
                 ListHeaderComponent={() => {
                     return (
                         <View style={styles.listHeaderContainer}>
@@ -31,17 +45,21 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
                 renderItem={({ item }) => {
                     return (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('TaskDetail', {task: item})}>
+                            onPress={() => navigation.navigate('TaskDetail', { task: item })}>
                             <View style={styles.itemContainer}>
-                                <Text style={styles.itemContractNumber}>{item.contractNumber
-                                }</Text>
-                                <Text>{item.status
-                                }</Text>
+                                <Text style={styles.itemContractNumber}>{item.contractNumber}</Text>
+                                <Text>{item.status}</Text>
                             </View>
                         </TouchableOpacity>
                     )
                 }}
             />
+            <View style={styles.buttonContainer}>
+                <GenericButton
+                    text='Start'
+                    onPress={startTaskList}
+                />
+            </View>
         </SafeAreaView>
     );
 }
@@ -91,6 +109,9 @@ const styles = StyleSheet.create({
     listHeader: {
         fontSize: 18,
         fontWeight: '500'
+    },
+    buttonContainer: {
+        marginVertical: 10
     }
 });
 

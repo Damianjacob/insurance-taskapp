@@ -10,7 +10,7 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
     const task = route.params.task
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.header}>Task for contract number {task.contractNumber}</Text>
+            <Text style={styles.header}>task status: {task.status}</Text>
             <View style={styles.taskCard}>
                 <Text style={[styles.label, {color:'blue'}]}>Insured Person</Text>
                 <Text style={[styles.value, {color:'blue'}]}>{task.name}</Text>

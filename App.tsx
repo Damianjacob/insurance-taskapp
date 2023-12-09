@@ -13,7 +13,8 @@ export type Task = {
 	birthdate: string
 	gender: string
 	address: string,
-	phone: string
+	phone: string,
+	id: string
 }
 type RootStackParamList = {
 	Home: undefined,
