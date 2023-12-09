@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 15,
         paddingVertical: 10,
-        borderRadius: 5
+        borderRadius: 5,
     },
     buttonText: {
         fontSize: 18

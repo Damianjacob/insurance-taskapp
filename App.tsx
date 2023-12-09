@@ -18,7 +18,7 @@ export type Task = {
 }
 type RootStackParamList = {
 	Home: undefined,
-	TaskDetail: { task: Task }
+	TaskDetail: { tasks: Task[], taskIndex: number }
 }
 
 export type TaskDetailProps = NativeStackScreenProps<RootStackParamList, 'TaskDetail'>

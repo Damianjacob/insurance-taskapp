@@ -1,19 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Task, TaskDetailProps } from '../../App';
+import GenericButton from './GenericButton';
 
 
 
 const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
-    console.log(route.params)
-    const task = route.params.task
+    // console.log(route.params)
+    const taskArray = route.params.tasks
+    const taskIndex = route.params.taskIndex
+    const task = taskArray[taskIndex]
+    // const currentTaskIndex = route.params.currentTaskIndex
+    // const task = tasks[currentTaskIndex]
+
+    const skipTask = () => {
+        navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: taskIndex + 1 })
+    }
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.header}>task status: {task.status}</Text>
             <View style={styles.taskCard}>
-                <Text style={[styles.label, {color:'blue'}]}>Insured Person</Text>
-                <Text style={[styles.value, {color:'blue'}]}>{task.name}</Text>
+                <Text style={[styles.label, { color: 'blue' }]}>Insured Person</Text>
+                <Text style={[styles.value, { color: 'blue' }]}>{task.name}</Text>
                 <Text style={styles.label}>Contract Number</Text>
                 <Text style={styles.value}>{task.contractNumber}</Text>
                 <View style={styles.columnContainer}>
@@ -27,17 +36,30 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                     </View>
 
                 </View>
-                    <View>
-                        <Text style={styles.label}>Phone Number</Text>
-                        <Text style={styles.value}>{task.phone}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.label}>Address</Text>
-                        <Text style={styles.value}>{task.address}</Text>
-                    </View>
-
+                <View>
+                    <Text style={styles.label}>Phone Number</Text>
+                    <Text style={styles.value}>{task.phone}</Text>
+                </View>
+                <View>
+                    <Text style={styles.label}>Address</Text>
+                    <Text style={styles.value}>{task.address}</Text>
+                </View>
             </View>
-            {/* <StatusBar style="auto" /> */}
+
+            <View style={styles.buttonRow}>
+                <GenericButton
+                    text='Escalate'
+                    onPress={() => { }}
+                />
+                <GenericButton
+                    text='Skip'
+                    onPress={skipTask}
+                />
+                <GenericButton
+                    text='Save'
+                    onPress={() => { }}
+                />
+            </View>
         </SafeAreaView>
     );
 }
@@ -80,6 +102,16 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontSize: 18
 
+    },
+    buttonRow: {
+        width: '100%',
+        paddingHorizontal: 15
+        , flexDirection: 'row',
+        // alignContent: 'flex-start',
+        justifyContent: 'space-between'
+    },
+    buttonContainer: {
+        // flex: 1
     }
 });
 

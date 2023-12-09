@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Button, Alert } from 'react-native';
 import { Task, TaskListProps } from '../../App';
 import GenericButton from './GenericButton';
@@ -10,6 +10,8 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
     const [taskArray, setTaskArray] = useState<Task[]>([])
+    const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0)
+    const newTasks: Task[] = taskArray.filter(task => task.status === 'new')
 
     useEffect(() => {
         // get tasks from file and set them as state when the app starts
@@ -17,15 +19,27 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
         setTaskArray(taskData)
     }, [])
 
+    // useEffect(() => {
+    //     navigation.navigate('TaskDetail', {task: newTasks[currentTaskIndex], skipTask: skipTask})
+    // }, [currentTaskIndex])
+
     const startTaskList = () => {
         // create array that contains only new tasks
-        const newTasks: Task[] = taskArray.filter(task => task.status === 'new')
-        if (newTasks.length > 0){
-            navigation.navigate('TaskDetail', { task: newTasks[0] })
+        if (newTasks.length > 0) {
+            navigation.navigate('TaskDetail', { tasks: newTasks, taskIndex: 0 })
         } else {
             Alert.alert('There are no new tasks')
         }
     }
+
+    // const skipTask = () => {
+    //     console.log('calling skiptask')
+    //     setCurrentTaskIndex(prev => {
+    //         let newState = prev + 1
+    //         navigation.navigate('TaskDetail', {task: newTasks[newState], skipTask: skipTask})
+    //         return newState
+    //     })
+    // }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -42,10 +56,10 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
                     )
                 }}
                 stickyHeaderIndices={[0]}
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                     return (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('TaskDetail', { task: item })}>
+                            onPress={() => navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: index})}>
                             <View style={styles.itemContainer}>
                                 <Text style={styles.itemContractNumber}>{item.contractNumber}</Text>
                                 <Text>{item.status}</Text>
