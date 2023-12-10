@@ -4,8 +4,6 @@ import { createContext, useState, useEffect } from 'react';
 import { Task } from './src/utils/types';
 import AppNavigation from './src/navigation/AppNavigation';
 
-const taskGoal = 200
-
 type TaskContext = {
 	taskArray: Task[]
 	updateTask?: (updatedTask: Task) => void
