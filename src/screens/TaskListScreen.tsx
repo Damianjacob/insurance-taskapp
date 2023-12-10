@@ -5,6 +5,7 @@ import { Task } from '../utils/types';
 import GenericButton from '../components/buttons/GenericButton';
 import { TaskContext } from '../../App';
 import TaskCounter from '../components/TaskCounter';
+import TaskPieChart from '../components/TaskPieChart';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -40,28 +41,35 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TaskCounter/>
-            <Text style={styles.header}>this is the tasklistscreen</Text>
-            <FlatList
-                initialNumToRender={15}
-                style={styles.taskList}
-                data={taskArray}
-                ListHeaderComponent={() => {
-                    return (
-                        <View style={styles.listHeaderContainer}>
-                            <Text style={styles.listHeader}>Contract Number</Text>
-                            <Text style={styles.listHeader}>Status</Text>
-                        </View>
-                    )
-                }}
-                stickyHeaderIndices={[0]}
-                renderItem={({ item, index }) => renderItem(item, index)}
-            />
-            <View style={styles.buttonContainer}>
-                <GenericButton
-                    text='Start'
-                    onPress={startTaskList}
+            <View style={styles.chartRow}>
+                <TaskCounter />
+                <TaskPieChart />
+                {/* <TaskCounter /> */}
+            </View>
+            <View style={styles.listSection}>
+
+                <Text style={styles.header}>Your Tasks</Text>
+                <FlatList
+                    initialNumToRender={15}
+                    style={styles.taskList}
+                    data={taskArray}
+                    ListHeaderComponent={() => {
+                        return (
+                            <View style={styles.listHeaderContainer}>
+                                <Text style={styles.listHeader}>Contract Number</Text>
+                                <Text style={styles.listHeader}>Status</Text>
+                            </View>
+                        )
+                    }}
+                    stickyHeaderIndices={[0]}
+                    renderItem={({ item, index }) => renderItem(item, index)}
                 />
+                <View style={styles.buttonContainer}>
+                    <GenericButton
+                        text='Start'
+                        onPress={startTaskList}
+                    />
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -69,20 +77,26 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     container: {
-        // paddingTop: 40,
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        //   justifyContent: 'center',
+    },
+    chartRow: {
+        flexDirection: 'row',
+        flex: 1
+    },
+    listSection: {
+        flex: 3,
+        width: '100%',
+        paddingTop: 10
     },
     header: {
         fontSize: 25,
         fontWeight: 'bold',
-        // marginTop: 30
+        textAlign: 'center'
     },
     itemContainer: {
         flexDirection: 'row',
-        // alignContent: 'space-between'
         justifyContent: 'space-between',
         marginVertical: 8,
         paddingVertical: 10,
@@ -91,11 +105,11 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     taskList: {
-        marginTop: 10,
+        // marginTop: 10,
         width: '100%',
         paddingHorizontal: 20,
         // height: windowHeight > windowWidth? windowHeight * 0.7 : windowWidth * 0.7
-        height: windowHeight * 0.5,
+        // height: windowHeight * 0.5,
         flexGrow: 0
     },
     itemContractNumber: {
@@ -115,7 +129,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginVertical: 10
-    }
+    },
 });
 
 export default TaskListScreen

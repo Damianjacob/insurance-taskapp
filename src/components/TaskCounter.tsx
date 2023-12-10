@@ -9,7 +9,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const TASKGOAL = 200
 
-const circleCircumference = 400
+const circleCircumference = windowWidth < windowHeight ? windowWidth : windowHeight
 const circleDiameter = circleCircumference / (2 * Math.PI)
 
 export default function TaskCounter() {
@@ -25,14 +25,16 @@ export default function TaskCounter() {
     console.log('strokedashoffset: ' + strokeDashoffset)
     return (
         <View style={styles.container}>
-            <Svg height={windowWidth * 0.4} width={windowWidth * 0.4}>
+            <Text style={styles.counterText}>Tasks completed in the last hour</Text>
+            <Text style={styles.counterNumber}>{tasksCompletedInLastHour.length}</Text>
+            <Svg height={windowWidth * 0.4} width={windowWidth * 0.4} style={{ position: 'absolute' }}>
                 <Circle
                     cx={windowWidth * 0.4 / 2}
                     cy={windowWidth * 0.4 / 2}
                     r={circleDiameter}
-                    stroke={'gray'}
-                    strokeWidth={15}
-                    fill={'white'}
+                    stroke={'lightgray'}
+                    strokeWidth={10}
+                    fill={'transparent'}
                 />
 
                 <Circle
@@ -40,14 +42,13 @@ export default function TaskCounter() {
                     cy={windowWidth * 0.4 / 2}
                     r={circleDiameter}
                     stroke={'blue'}
-                    strokeWidth={15}
+                    strokeWidth={12}
                     strokeDasharray={circleCircumference}
                     strokeDashoffset={strokeDashoffset}
-                    // strokeDashoffset={numberCompletedTasks === 0 ? circleCircumference : circleCircumference * taskPercentage}
-                    fill={'white'}
+                    fill={'transparent'}
                 />
             </Svg>
-            <Text>Number of tasks completed in last hour: {tasksCompletedInLastHour.length}</Text>
+            <Text style={styles.dailyGoalCounterText}>{TASKGOAL - numberCompletedTasks} missing to daily goal</Text>
         </View>
     );
 }
@@ -55,8 +56,28 @@ export default function TaskCounter() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: 'blue',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+        // backgroundColor: 'red'
+        borderRadius: 5,
+        borderColor: 'slategray',
+        borderWidth: 1,
+        margin: 5
     },
+    counterText: {
+        width: circleDiameter * 1.5,
+        textAlign: 'center'
+    },
+    counterNumber: {
+        width: circleDiameter * 1.5,
+        textAlign: 'center',
+        fontSize: 16,
+        color: 'blue',
+        fontWeight: '600'
+    },
+    dailyGoalCounterText: {
+        position: 'absolute',
+        bottom: 2
+    }
 });
