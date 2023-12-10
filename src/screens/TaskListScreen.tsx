@@ -8,9 +8,6 @@ import TaskCounter from '../components/TaskCounter';
 import TaskPieChart from '../components/TaskPieChart';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
     const taskContext = useContext(TaskContext)
     const taskArray = taskContext.taskArray
@@ -25,7 +22,6 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
             Alert.alert('There are no new tasks')
         }
     }
-
 
     const renderItem = (item: Task, index: number) => {
         if (filter && filter !== item.status) {

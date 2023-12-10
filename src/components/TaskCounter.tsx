@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { TaskContext } from '../../App';
 import { useContext } from 'react';
 import Svg, { Circle } from 'react-native-svg'
-import Animated from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

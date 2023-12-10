@@ -2,8 +2,6 @@ import 'react-native-gesture-handler';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { TaskContext } from '../../App';
 import { useContext } from 'react';
-import Svg, { Circle } from 'react-native-svg'
-import Animated from 'react-native-reanimated';
 import PieChart from 'react-native-pie-chart'
 
 const windowWidth = Dimensions.get('window').width;
@@ -40,15 +38,15 @@ export default function TaskPieChart() {
             <View style={styles.colorRowContainer}>
                 <View style={styles.colorRow}>
                     <View style={[styles.colorSquare, { backgroundColor: 'lightgray' }]}></View>
-                    <Text style={styles.colorExplanationText}>New ({Math.round(percentageNewTasks)}%)</Text>
+                    <Text>New ({Math.round(percentageNewTasks)}%)</Text>
                 </View>
                 <View style={styles.colorRow}>
                     <View style={[styles.colorSquare, { backgroundColor: 'orange' }]}></View>
-                    <Text style={styles.colorExplanationText}>Escalated ({Math.round(percentageEscalatedTasks)}%)</Text>
+                    <Text>Escalated ({Math.round(percentageEscalatedTasks)}%)</Text>
                 </View>
                 <View style={styles.colorRow}>
                     <View style={[styles.colorSquare, { backgroundColor: 'green' }]}></View>
-                    <Text style={styles.colorExplanationText}>Done ({Math.round(percentageCompletedTasks)}%)</Text>
+                    <Text>Done ({Math.round(percentageCompletedTasks)}%)</Text>
                 </View>
             </View>
         </View>
@@ -79,7 +77,6 @@ const styles = StyleSheet.create({
     },
     colorRowContainer: {
         alignItems: 'flex-start',
-        // flex: 1,
         marginTop: 5
     },
     colorRow: {
@@ -92,11 +89,5 @@ const styles = StyleSheet.create({
         height: 10,
         width: 10,
         marginRight: 5
-    },
-    colorExplanationText: {
-
-    },
-    // piechart: {
-    //     flex: 1
-    // }
+    }
 });

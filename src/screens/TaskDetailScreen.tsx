@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Alert, TextInput, Dimensions, ScrollView } from 'react-native';
 import { TaskDetailProps } from '../utils/types';
 import GenericButton from '../components/buttons/GenericButton';
@@ -39,7 +39,7 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
         }
         if (updateTask) {
             updateTask(updatedTask)
-            if (!filterBy){
+            if (!filterBy) {
                 navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: taskIndex + 1, filterBy })
             }
         } else {
@@ -55,7 +55,7 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
         }
         if (updateTask) {
             updateTask(updatedTask)
-            if (!filterBy){
+            if (!filterBy) {
                 navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: taskIndex + 1, filterBy })
             }
         } else {
@@ -185,7 +185,7 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                                     text='Mark as Done'
                                     backgroundColor='green'
                                     onPress={markTaskAsDone}
-                                    disable={currentTask.status !== 'new'}
+                                    disable={currentTask.status !== 'new' || !currentTask.birthdate}
                                 />
                             </View>
 
@@ -212,7 +212,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        // justifyContent: 'center',
     },
     counterRow: {
         flex: 1,
@@ -297,7 +296,6 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     taskHeaderSection: {
-        // backgroundColor: 'lightblue',
         marginHorizontal: -10,
         marginTop: -10,
         paddingHorizontal: 10,
@@ -318,7 +316,6 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'center'
     },
     icon: {
         marginRight: 10,
