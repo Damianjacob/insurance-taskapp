@@ -9,7 +9,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const TASKGOAL = 200
 
-const circleCircumference = windowWidth < windowHeight ? windowWidth : windowHeight
+const circleCircumference = windowWidth < windowHeight ? windowWidth : windowHeight / 2
 const circleDiameter = circleCircumference / (2 * Math.PI)
 
 export default function TaskCounter() {
@@ -27,10 +27,10 @@ export default function TaskCounter() {
         <View style={styles.container}>
             <Text style={styles.counterText}>Tasks completed in the last hour</Text>
             <Text style={styles.counterNumber}>{tasksCompletedInLastHour.length}</Text>
-            <Svg height={windowWidth * 0.4} width={windowWidth * 0.4} style={{ position: 'absolute' }}>
+            <Svg height={circleCircumference * 0.4} width={circleCircumference * 0.4} style={{ position: 'absolute' }}>
                 <Circle
-                    cx={windowWidth * 0.4 / 2}
-                    cy={windowWidth * 0.4 / 2}
+                    cx={circleCircumference * 0.2}
+                    cy={circleCircumference * 0.2}
                     r={circleDiameter}
                     stroke={'lightgray'}
                     strokeWidth={10}
@@ -38,8 +38,8 @@ export default function TaskCounter() {
                 />
 
                 <Circle
-                    cx={windowWidth * 0.4 / 2}
-                    cy={windowWidth * 0.4 / 2}
+                    cx={circleCircumference * 0.4 / 2}
+                    cy={circleCircumference * 0.4 / 2}
                     r={circleDiameter}
                     stroke={'blue'}
                     strokeWidth={12}

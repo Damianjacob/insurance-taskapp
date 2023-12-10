@@ -99,13 +99,11 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                 <TaskCounter />
             </View>
             <View style={styles.taskContainer}>
-
-
                 <ScrollView style={styles.scrollContainer}
                     contentContainerStyle={{ alignItems: 'center' }}>
                     {currentTask ?
                         <>
-                            <Text style={styles.header}>task status: {currentTask.status}</Text>
+                            <Text style={styles.header}>Please check the age of the patient</Text>
                             <View style={styles.taskCard}>
                                 <Text style={[styles.label, { color: 'blue' }]}>Insured Person</Text>
                                 <Text style={[styles.value, { color: 'blue' }]}>{currentTask.name}</Text>
@@ -177,7 +175,6 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                                 `You don't have any more tasks marked as ${filterBy}`
                                 :
                                 "You don't have any tasks"
-
                         }</Text>
                     }
                     <GenericButton
@@ -237,10 +234,9 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     buttonRow: {
-        width: '100%',
+        width: '90%',
         paddingHorizontal: 15,
         flexDirection: 'row',
-        // alignContent: 'flex-start',
         justifyContent: 'space-between',
         marginBottom: 20
     },
