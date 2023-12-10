@@ -95,91 +95,97 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView style={styles.container}
-                contentContainerStyle={{ alignItems: 'center' }}>
-                {currentTask ?
-                    <>
-                        <TaskCounter />
-                        <Text style={styles.header}>task status: {currentTask.status}</Text>
-                        <View style={styles.taskCard}>
-                            <Text style={[styles.label, { color: 'blue' }]}>Insured Person</Text>
-                            <Text style={[styles.value, { color: 'blue' }]}>{currentTask.name}</Text>
-                            <Text style={styles.label}>Contract Number</Text>
-                            <Text style={styles.value}>{currentTask.contractNumber}</Text>
-                            <View style={styles.columnContainer}>
-                                <View style={styles.column}>
-                                    <Text style={styles.label}>Gender</Text>
-                                    <Text style={styles.value}>{currentTask.gender}</Text>
-                                </View>
-                                <View style={styles.column}>
-                                    <Text style={styles.label}>Birthdate</Text>
-                                    <Text style={styles.value}>{currentTask.birthdate ? currentTask.birthdate : ''}</Text>
-                                </View>
+            <View style={styles.counterRow}>
+                <TaskCounter />
+            </View>
+            <View style={styles.taskContainer}>
 
-                            </View>
-                            <View>
-                                <Text style={styles.label}>Phone Number</Text>
-                                <Text style={styles.value}>{currentTask.phone}</Text>
-                            </View>
-                            <View>
-                                <Text style={styles.label}>Address</Text>
-                                <Text style={styles.value}>{currentTask.address}</Text>
-                            </View>
-                        </View>
 
-                        <View style={styles.userInputContainer}>
-                            <Text style={styles.userInputLabel}>Insert missing information: birthdate</Text>
-                            <TextInput
-                                style={styles.userInput}
-                                placeholder='birthdate'
-                                onChangeText={(text) => { setUserInput(text) }}
-                                value={userInput}
-                                keyboardType='numeric'
-                            />
-                            <Text style={styles.inputErrorMessage}>{inputErrorMessage}</Text>
-                            <View style={styles.buttonContainer}>
+                <ScrollView style={styles.scrollContainer}
+                    contentContainerStyle={{ alignItems: 'center' }}>
+                    {currentTask ?
+                        <>
+                            <Text style={styles.header}>task status: {currentTask.status}</Text>
+                            <View style={styles.taskCard}>
+                                <Text style={[styles.label, { color: 'blue' }]}>Insured Person</Text>
+                                <Text style={[styles.value, { color: 'blue' }]}>{currentTask.name}</Text>
+                                <Text style={styles.label}>Contract Number</Text>
+                                <Text style={styles.value}>{currentTask.contractNumber}</Text>
+                                <View style={styles.columnContainer}>
+                                    <View style={styles.column}>
+                                        <Text style={styles.label}>Gender</Text>
+                                        <Text style={styles.value}>{currentTask.gender}</Text>
+                                    </View>
+                                    <View style={styles.column}>
+                                        <Text style={styles.label}>Birthdate</Text>
+                                        <Text style={styles.value}>{currentTask.birthdate ? currentTask.birthdate : ''}</Text>
+                                    </View>
+
+                                </View>
+                                <View>
+                                    <Text style={styles.label}>Phone Number</Text>
+                                    <Text style={styles.value}>{currentTask.phone}</Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.label}>Address</Text>
+                                    <Text style={styles.value}>{currentTask.address}</Text>
+                                </View>
+                            </View>
+
+                            <View style={styles.userInputContainer}>
+                                <Text style={styles.userInputLabel}>Insert missing information: birthdate</Text>
+                                <TextInput
+                                    style={styles.userInput}
+                                    placeholder='birthdate'
+                                    onChangeText={(text) => { setUserInput(text) }}
+                                    value={userInput}
+                                    keyboardType='numeric'
+                                />
+                                <Text style={styles.inputErrorMessage}>{inputErrorMessage}</Text>
+                                <View style={styles.buttonContainer}>
+                                    <GenericButton
+                                        onPress={updateMissingInfo}
+                                        text='Save'
+                                        disable={currentTask.status !== 'new'}
+                                    />
+                                </View>
+                            </View>
+
+                            <View style={styles.buttonRow}>
                                 <GenericButton
-                                    onPress={updateMissingInfo}
-                                    text='Save'
+                                    text='Escalate'
+                                    onPress={escalateTask}
+                                    backgroundColor='orange'
+                                    disable={currentTask.status !== 'new'}
+                                />
+                                <GenericButton
+                                    text='Skip'
+                                    onPress={skipTask}
+                                />
+                                <GenericButton
+                                    text='Mark as Done'
+                                    backgroundColor='green'
+                                    onPress={markTaskAsDone}
                                     disable={currentTask.status !== 'new'}
                                 />
                             </View>
-                        </View>
 
-                        <View style={styles.buttonRow}>
-                            <GenericButton
-                                text='Escalate'
-                                onPress={escalateTask}
-                                backgroundColor='orange'
-                                disable={currentTask.status !== 'new'}
-                            />
-                            <GenericButton
-                                text='Skip'
-                                onPress={skipTask}
-                            />
-                            <GenericButton
-                                text='Mark as Done'
-                                backgroundColor='green'
-                                onPress={markTaskAsDone}
-                                disable={currentTask.status !== 'new'}
-                            />
-                        </View>
+                        </>
+                        :
+                        <Text style={styles.noTaskMessage}>{
+                            filterBy ?
+                                `You don't have any more tasks marked as ${filterBy}`
+                                :
+                                "You don't have any tasks"
 
-                    </>
-                    :
-                    <Text style={styles.noTaskMessage}>{
-                        filterBy ?
-                            `You don't have any more tasks marked as ${filterBy}`
-                            :
-                            "You don't have any tasks"
-
-                    }</Text>
-                }
-                <GenericButton
-                    text='Back to Task Overview'
-                    onPress={() => { navigation.navigate('Home') }}
-                />
-            </ScrollView>
+                        }</Text>
+                    }
+                    <GenericButton
+                        text='Back to Task Overview'
+                        onPress={() => { navigation.navigate('Home') }}
+                    />
+                </ScrollView>
+            </View>
         </SafeAreaView>
     );
 }
@@ -189,6 +195,17 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         // justifyContent: 'center',
+    },
+    counterRow: {
+        flex: 1,
+        marginHorizontal: windowWidth * 0.2
+    },
+    scrollContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    taskContainer: {
+        flex: 3
     },
     header: {
         fontSize: 30,

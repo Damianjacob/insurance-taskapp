@@ -58,28 +58,26 @@ export default function TaskPieChart() {
                 />
             </Svg> */}
             {totalTasks === 0 ?
-                <></>
+                <Text>Loading</Text>
                 :
                 <PieChart
                     widthAndHeight={windowWidth * 0.2}
                     series={series}
                     sliceColor={colors}
-                // coverRadius={0.45}
                 />
-
             }
             <View style={styles.colorRowContainer}>
                 <View style={styles.colorRow}>
                     <View style={[styles.colorSquare, { backgroundColor: 'lightgray' }]}></View>
-                    <Text style={styles.colorExplanationText}>New ({percentageNewTasks}%)</Text>
+                    <Text style={styles.colorExplanationText}>New ({Math.round(percentageNewTasks)}%)</Text>
                 </View>
                 <View style={styles.colorRow}>
                     <View style={[styles.colorSquare, { backgroundColor: 'orange' }]}></View>
-                    <Text style={styles.colorExplanationText}>Escalated ({percentageEscalatedTasks}%)</Text>
+                    <Text style={styles.colorExplanationText}>Escalated ({Math.round(percentageEscalatedTasks)}%)</Text>
                 </View>
                 <View style={styles.colorRow}>
                     <View style={[styles.colorSquare, { backgroundColor: 'green' }]}></View>
-                    <Text style={styles.colorExplanationText}>Done ({percentageCompletedTasks}%)</Text>
+                    <Text style={styles.colorExplanationText}>Done ({Math.round(percentageCompletedTasks)}%)</Text>
                 </View>
             </View>
         </View>
