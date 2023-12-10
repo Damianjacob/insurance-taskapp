@@ -20,9 +20,7 @@ export default function TaskCounter() {
     const numberCompletedTasks = completedTasks.length
     const tasksCompletedInLastHour = completedTasks.filter(task => task.completionTime !== undefined && currentTime - task.completionTime < 60 * 60 * 1000)
     const taskPercentage = numberCompletedTasks / TASKGOAL
-    console.log(taskPercentage)
     const strokeDashoffset = numberCompletedTasks === 0 ? circleCircumference : circleCircumference * (1 - taskPercentage)
-    console.log('strokedashoffset: ' + strokeDashoffset)
     return (
         <View style={styles.container}>
             <Text style={styles.counterText}>Tasks completed in the last hour</Text>

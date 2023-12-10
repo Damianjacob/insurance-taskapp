@@ -1,27 +1,25 @@
-import React, { FC, useContext } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Button, Alert } from 'react-native';
+import React, { FC, useContext, useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { TaskListProps } from '../utils/types';
 import { Task } from '../utils/types';
 import GenericButton from '../components/buttons/GenericButton';
 import { TaskContext } from '../../App';
 import TaskCounter from '../components/TaskCounter';
 import TaskPieChart from '../components/TaskPieChart';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
-    // const [taskArray, setTaskArray] = useState<Task[]>([])
     const taskContext = useContext(TaskContext)
     const taskArray = taskContext.taskArray
-    // const updateTaskArray = taskContext.updateTaskArray
-    // const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0)
+    const [filter, setFilter] = useState<"new" | "done" | "escalated" | undefined>(undefined)
     const newTasks: Task[] = taskArray.filter(task => task.status === 'new')
 
     const startTaskList = () => {
-        // create array that contains only new tasks
         if (newTasks.length > 0) {
-            navigation.navigate('TaskDetail', { tasks: newTasks, taskIndex: 0, filterBy: 'new' })
+            navigation.navigate('TaskDetail', { tasks: newTasks, taskIndex: 0, filterBy: filter })
         } else {
             Alert.alert('There are no new tasks')
         }
@@ -32,8 +30,20 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
             <TouchableOpacity
                 onPress={() => navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: index })}>
                 <View style={styles.itemContainer}>
-                    <Text style={styles.itemContractNumber}>{item.contractNumber}</Text>
-                    <Text>{item.status}</Text>
+                    <View style={styles.iconRow}>
+                        <Ionicons
+                            name='document'
+                            size={16}
+                            style={styles.icon} />
+                        <Text style={styles.itemContractNumber}>{item.contractNumber}</Text>
+                    </View>
+                    <View style={styles.iconRow}>
+                        <Text>{item.status}</Text>
+                        <Ionicons
+                            name={item.status === 'done' ? 'checkmark' : item.status === 'escalated' ? 'arrow-up' : 'pencil'}
+                            size={16}
+                            style={styles.icon} />
+                    </View>
                 </View>
             </TouchableOpacity>
         )
@@ -129,6 +139,12 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginVertical: 10
+    },
+    iconRow: {
+        flexDirection: 'row'
+    },
+    icon: {
+        marginLeft: 5
     },
 });
 

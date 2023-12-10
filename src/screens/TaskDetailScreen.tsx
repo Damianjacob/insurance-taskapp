@@ -4,6 +4,8 @@ import { TaskDetailProps } from '../utils/types';
 import GenericButton from '../components/buttons/GenericButton';
 import { TaskContext } from '../../App';
 import TaskCounter from '../components/TaskCounter';
+import { LinearGradient } from 'expo-linear-gradient';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -12,17 +14,14 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
     const [userInput, setUserInput] = useState<string>('')
     const [inputErrorMessage, setInputErrorMessage] = useState<string>('')
     const taskContext = useContext(TaskContext)
-    // const updateTaskArray = taskContext.updateTaskArray
     const updateTask = taskContext.updateTask
-    // const taskArray = route.params.tasks
+
     const filterBy = route.params.filterBy
     // Define the task array based on whether there was a filter for the status
     const taskArray = filterBy ? taskContext.taskArray.filter(task => task.status === filterBy) : taskContext.taskArray
     const taskIndex = route.params.taskIndex
     const currentTask = taskArray[taskIndex]
 
-    console.log('currentTask:')
-    console.log(currentTask)
     const skipTask = () => {
         if (taskArray.length > taskIndex) {
             navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: taskIndex + 1, filterBy })
@@ -61,7 +60,6 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
 
     const updateMissingInfo = () => {
         const valid = validateInput(userInput)
-        console.log('userinput: ' + userInput)
 
         if (valid) {
             const updatedTask = {
@@ -69,8 +67,6 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                 birthdate: userInput
             }
 
-            console.log('updated task: ')
-            console.log(updatedTask)
             if (updateTask) {
                 updateTask(updatedTask)
             } else {
@@ -103,10 +99,27 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                     contentContainerStyle={{ alignItems: 'center' }}>
                     {currentTask ?
                         <>
-                            <Text style={styles.header}>Please check the age of the patient</Text>
                             <View style={styles.taskCard}>
-                                <Text style={[styles.label, { color: 'blue' }]}>Insured Person</Text>
-                                <Text style={[styles.value, { color: 'blue' }]}>{currentTask.name}</Text>
+                                <LinearGradient
+                                    colors={['lightblue', 'white']}
+                                    style={styles.linearGradient}
+                                >
+                                    <View style={styles.taskHeaderSection}>
+                                        <Text style={styles.header}>Please check the age of the patient</Text>
+                                        <Text style={styles.description}>Rule 334: The GOZ 2000 can only be billed from 7 to 18 years of age. For insured persons under 6 years of age, only billable in the case of premature eruption of the 6-year molar.</Text>
+                                        <Text style={styles.subHeader}>Status: {currentTask.status}</Text>
+                                    </View>
+                                </LinearGradient>
+                                <View style={styles.row}>
+                                    <Ionicons
+                                        name='person'
+                                        size={32}
+                                        style={styles.icon} />
+                                    <View>
+                                        <Text style={[styles.label, { color: 'blue' }]}>Insured Person</Text>
+                                        <Text style={[styles.value, { color: 'blue' }]}>{currentTask.name}</Text>
+                                    </View>
+                                </View>
                                 <Text style={styles.label}>Contract Number</Text>
                                 <Text style={styles.value}>{currentTask.contractNumber}</Text>
                                 <View style={styles.columnContainer}>
@@ -130,25 +143,29 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                                 </View>
                             </View>
 
-                            <View style={styles.userInputContainer}>
-                                <Text style={styles.userInputLabel}>Insert missing information: birthdate</Text>
-                                <TextInput
-                                    style={styles.userInput}
-                                    placeholder='birthdate'
-                                    onChangeText={(text) => { setUserInput(text) }}
-                                    value={userInput}
-                                    keyboardType='numeric'
-                                />
-                                <Text style={styles.inputErrorMessage}>{inputErrorMessage}</Text>
-                                <View style={styles.buttonContainer}>
-                                    <GenericButton
-                                        onPress={updateMissingInfo}
-                                        text='Save'
-                                        disable={currentTask.status !== 'new'}
-                                    />
-                                </View>
-                            </View>
 
+                            {currentTask.status !== 'new' ?
+                                <></>
+                                :
+                                <View style={styles.userInputContainer}>
+                                    <Text style={styles.userInputLabel}>Insert missing information: birthdate</Text>
+                                    <TextInput
+                                        style={styles.userInput}
+                                        placeholder='birthdate'
+                                        onChangeText={(text) => { setUserInput(text) }}
+                                        value={userInput}
+                                        keyboardType='numeric'
+                                    />
+                                    <Text style={styles.inputErrorMessage}>{inputErrorMessage}</Text>
+                                    <View style={styles.buttonContainer}>
+                                        <GenericButton
+                                            onPress={updateMissingInfo}
+                                            text='Save'
+                                            disable={currentTask.status !== 'new'}
+                                        />
+                                    </View>
+                                </View>
+                            }
                             <View style={styles.buttonRow}>
                                 <GenericButton
                                     text='Escalate'
@@ -206,7 +223,10 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    description: {
     },
     taskCard: {
         borderRadius: 5,
@@ -271,6 +291,34 @@ const styles = StyleSheet.create({
     inputErrorMessage: {
         color: 'red',
         textAlign: 'center'
+    },
+    taskHeaderSection: {
+        // backgroundColor: 'lightblue',
+        marginHorizontal: -10,
+        marginTop: -10,
+        paddingHorizontal: 10,
+        paddingTop: 10
+    },
+    linearGradient: {
+        marginHorizontal: -10,
+        marginTop: -10,
+        paddingHorizontal: 10,
+        paddingTop: 10
+    },
+    subHeader: {
+        textAlign: 'center',
+        fontSize: 18,
+        marginTop: 5,
+        fontWeight: '500'
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        // justifyContent: 'center'
+    },
+    icon: {
+        marginRight: 10,
+        color: 'blue'
     }
 });
 

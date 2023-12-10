@@ -15,17 +15,9 @@ const circleDiameter = circleCircumference / (2 * Math.PI)
 
 export default function TaskPieChart() {
     const taskContext = useContext(TaskContext)
-
     const numberCompletedTasks: number = taskContext.taskArray.filter(task => task.status === 'done').length
     const numberNewTasks: number = taskContext.taskArray.filter(task => task.status === 'new').length
     const numberEscalatedTasks: number = taskContext.taskArray.filter(task => task.status === 'escalated').length
-
-
-    console.log('numberoftasks:')
-
-    console.log(numberCompletedTasks)
-    console.log(numberNewTasks)
-    console.log(numberEscalatedTasks)
     const series: number[] = [numberNewTasks, numberCompletedTasks, numberEscalatedTasks]
     const colors: string[] = ['lightgray', 'green', 'orange']
 
