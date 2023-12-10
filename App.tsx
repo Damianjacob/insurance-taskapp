@@ -4,19 +4,16 @@ import { createContext, useState, useEffect } from 'react';
 import { Task } from './src/utils/types';
 import AppNavigation from './src/navigation/AppNavigation';
 
+const taskGoal = 200
+
 type TaskContext = {
 	taskArray: Task[]
-	updateTaskArray?: (newTaskArray: Task[]) => void
 	updateTask?: (updatedTask: Task) => void
 }
 export const TaskContext = createContext<TaskContext>({ taskArray: [] })
 
 export default function App() {
 	const [taskArray, setTaskArray] = useState<Task[]>([])
-
-	const updateTaskArray = (newTaskArray: Task[]) => {
-		setTaskArray(newTaskArray)
-	}
 
 	const updateTask = (updatedTask: Task) => {
 		// taskArray.filter(task => task.id === updatedTask.id)
@@ -28,7 +25,6 @@ export default function App() {
 
 	const taskContext: TaskContext = {
 		taskArray: taskArray,
-		updateTaskArray: updateTaskArray,
 		updateTask: updateTask
 	}
 
@@ -36,7 +32,6 @@ export default function App() {
 		// get tasks from file and set them as state when the app starts
 		const taskData: Task[] = require('./tasks.json')
 		setTaskArray(taskData)
-		// console.log(taskData)
 	}, [])
 
 	return (

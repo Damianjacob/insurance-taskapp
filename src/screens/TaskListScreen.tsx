@@ -1,11 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Button, Alert } from 'react-native';
 import { TaskListProps } from '../utils/types';
 import { Task } from '../utils/types';
 import GenericButton from '../components/buttons/GenericButton';
 import { TaskContext } from '../../App';
+import TaskCounter from '../components/TaskCounter';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -14,7 +13,7 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
     // const [taskArray, setTaskArray] = useState<Task[]>([])
     const taskContext = useContext(TaskContext)
     const taskArray = taskContext.taskArray
-    const updateTaskArray = taskContext.updateTaskArray
+    // const updateTaskArray = taskContext.updateTaskArray
     // const [currentTaskIndex, setCurrentTaskIndex] = useState<number>(0)
     const newTasks: Task[] = taskArray.filter(task => task.status === 'new')
 
@@ -41,6 +40,7 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <TaskCounter/>
             <Text style={styles.header}>this is the tasklistscreen</Text>
             <FlatList
                 initialNumToRender={15}

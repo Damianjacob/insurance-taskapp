@@ -1,13 +1,14 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 export type Task = {
-	contractNumber: string
-	name: string
-	status: string
-	birthdate: string
-	gender: string
-	address: string,
-	phone: string,
-	id: string
+    contractNumber: string
+    name: string
+    status: string
+    birthdate: string
+    gender: string
+    address: string,
+    phone: string,
+    id: string,
+    completionTime?: number
 }
 
 // The following are the type definitions for the parameters of TaskDetailScreen and TaskListScreen.
