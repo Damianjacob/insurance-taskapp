@@ -9,7 +9,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const TASKGOAL = 200
 
-const circleCircumference = windowWidth < windowHeight ? windowWidth : windowHeight / 2
+const circleCircumference = windowWidth < windowHeight ? windowWidth * 0.85 : windowHeight / 2
 const circleDiameter = circleCircumference / (2 * Math.PI)
 
 export default function TaskCounter() {

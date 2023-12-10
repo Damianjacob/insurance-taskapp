@@ -39,6 +39,9 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
         }
         if (updateTask) {
             updateTask(updatedTask)
+            if (!filterBy){
+                navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: taskIndex + 1, filterBy })
+            }
         } else {
             console.error('updateTask is undefined')
         }
@@ -52,6 +55,9 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
         }
         if (updateTask) {
             updateTask(updatedTask)
+            if (!filterBy){
+                navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: taskIndex + 1, filterBy })
+            }
         } else {
             console.error('updateTask is undefined')
         }
@@ -60,13 +66,11 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
 
     const updateMissingInfo = () => {
         const valid = validateInput(userInput)
-
         if (valid) {
             const updatedTask = {
                 ...currentTask,
                 birthdate: userInput
             }
-
             if (updateTask) {
                 updateTask(updatedTask)
             } else {
@@ -191,7 +195,7 @@ const TaskDetailScreen: FC<TaskDetailProps> = ({ navigation, route }) => {
                             filterBy ?
                                 `You don't have any more tasks marked as ${filterBy}`
                                 :
-                                "You don't have any tasks"
+                                "You don't have any more tasks"
                         }</Text>
                     }
                     <GenericButton

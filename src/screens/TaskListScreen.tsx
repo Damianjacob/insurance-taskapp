@@ -1,5 +1,5 @@
 import React, { FC, useContext, useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, FlatList, Dimensions, TouchableOpacity, Alert, Modal, Pressable } from 'react-native';
 import { TaskListProps } from '../utils/types';
 import { Task } from '../utils/types';
 import GenericButton from '../components/buttons/GenericButton';
@@ -15,6 +15,7 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
     const taskContext = useContext(TaskContext)
     const taskArray = taskContext.taskArray
     const [filter, setFilter] = useState<"new" | "done" | "escalated" | undefined>(undefined)
+    const [modalVisible, setModalVisible] = useState<boolean>(false)
     const newTasks: Task[] = taskArray.filter(task => task.status === 'new')
 
     const startTaskList = () => {
@@ -25,7 +26,12 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
         }
     }
 
+
     const renderItem = (item: Task, index: number) => {
+        if (filter && filter !== item.status) {
+            return <></>
+        }
+
         return (
             <TouchableOpacity
                 onPress={() => navigation.navigate('TaskDetail', { tasks: taskArray, taskIndex: index })}>
@@ -60,6 +66,7 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
 
                 <Text style={styles.header}>Your Tasks</Text>
                 <FlatList
+                    extraData={filter}
                     initialNumToRender={15}
                     style={styles.taskList}
                     data={taskArray}
@@ -67,7 +74,19 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
                         return (
                             <View style={styles.listHeaderContainer}>
                                 <Text style={styles.listHeader}>Contract Number</Text>
-                                <Text style={styles.listHeader}>Status</Text>
+                                <View style={styles.iconRow}>
+                                    <TouchableOpacity
+                                        onPress={() => { setModalVisible(true) }}
+                                    >
+                                        <Ionicons
+                                            name='filter'
+                                            size={28}
+                                            style={{ color: 'blue', marginRight: 5 }}
+                                        />
+                                    </TouchableOpacity>
+                                    <Text style={styles.listHeader}>Status</Text>
+
+                                </View>
                             </View>
                         )
                     }}
@@ -81,6 +100,45 @@ const TaskListScreen: FC<TaskListProps> = ({ navigation, route }) => {
                     />
                 </View>
             </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Select one filter</Text>
+                        <Pressable
+                            style={[styles.filterOptionsButton, { backgroundColor: !filter ? 'green' : 'white' }]}
+                            onPress={() => setFilter(undefined)}>
+                            <Text style={styles.filterOptionsText}>None</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.filterOptionsButton, { backgroundColor: filter === 'done' ? 'green' : 'white' }]}
+                            onPress={() => setFilter('done')}>
+                            <Text style={styles.filterOptionsText}>Done</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.filterOptionsButton, { backgroundColor: filter === 'new' ? 'green' : 'white' }]}
+                            onPress={() => setFilter('new')}>
+                            <Text style={styles.filterOptionsText}>New</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.filterOptionsButton, { backgroundColor: filter === 'escalated' ? 'green' : 'white' }]}
+                            onPress={() => setFilter('escalated')}>
+                            <Text style={styles.filterOptionsText}>Escalated</Text>
+                        </Pressable>
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => setModalVisible(!modalVisible)}>
+                            <Text style={styles.textStyle}>Close</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }
@@ -141,11 +199,67 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     iconRow: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     icon: {
         marginLeft: 5
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    filterOptionsButton: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderWidth: 1,
+        borderColor: 'slategray',
+        marginVertical: 10,
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 20
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+        marginTop: 20
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    filterOptionsText: {
+        textAlign: 'center',
+        color: 'black'
+    }
+
 });
 
 export default TaskListScreen
